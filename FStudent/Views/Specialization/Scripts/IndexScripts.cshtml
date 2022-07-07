@@ -1,0 +1,173 @@
+﻿<partial name="_GetFunction" />
+<partial name="_SplitPage" />
+<script>
+    $(document).ready(function () {
+        $('#searchstring').keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                goToPage(1);
+                return false;
+            }
+        });
+        goToPage(1);
+    });
+
+    function goToPage(pageIndex) {
+        var pageSize = $('#pagesize').val();
+        var filter = $('#searchstring').val() == null ? "" : $('#searchstring').val();
+        $.ajax({
+            type: "GET",
+            url: getUrl("/api/chuyennganhapi/getall", pageIndex, pageSize, filter),
+            success: function (result) {
+                //$('#message').html(JSON.stringify(result));
+
+                var data = result.data;
+
+                var items = data.items;
+                var s = ``;
+                for (var i = 0; i < items.length; i++) {
+                    s += `<tr><td class="align-middle text-center"> ${(i + 1) + (data.pageIndex - 1) * data.pageSize} </td>
+                        <td class="align-middle text-left text-break">${items[i].name}</td>
+                        <td class="align-middle text-left text-break">${items[i].description}</td>
+                        <td class="text-center align-middle">
+                            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalEdit" onclick="getDetail('${items[i].id}', 1)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                </svg>
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete" onclick="getDetail('${items[i].id}', 2)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                                  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5ZM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11Zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5h9.916Zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5Z"></path>
+                                </svg>
+                            </button>
+                        </td></tr>`;
+                }
+                $('#data').html(s);
+
+                showPageScroll(data.pageIndex, data.pageCount);
+                $('#resultmessage').html(`Đã hiển thị ${items.length} trong số ${data.totalRecords} kết quả`);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+    }
+
+    function create() {
+        //Prepare data
+        var rows = $("#createList").find('tr');
+        var obj = null;
+        var arrObj = [];
+        for (var i = 0; i < rows.length; i++) {
+            var cols = $(rows[i]).find('td');
+
+            var data1 = $(cols[0]).find('input').val();
+            var data2 = $(cols[1]).find('input').val();
+
+            obj = { "name": data1, "description": data2 };
+
+            arrObj.push(obj);
+        }
+
+        //Post data
+        $.ajax({
+            type: "POST",
+            url: "/api/chuyennganhapi/createspc",
+            dataType: 'json',
+            data: JSON.stringify(arrObj),
+            contentType: 'application/json',
+            success: function (result) {
+                showMessage(result.message);
+                refreshModalCreate();
+                goToPage(1);
+            },
+            error: function (result) {
+                showMessage(result.message);
+            },
+        });
+    }
+
+    function refreshModalCreate() {
+        var refresh = `<tr>
+                            <td class="align-middle text-left text-break">
+                                <input type="text" class="form-control" />
+                            </td>
+                            <td class="align-middle text-left text-break">
+                                <input type="text" class="form-control" />
+                            </td>
+                        </tr>`;
+        $('#createList').html(refresh);
+    }
+
+    function showMessage(str) {
+        $('#message').html(str);
+    }
+
+    function getDetail(id, handle) {
+        $.ajax({
+            type: "GET",
+            url: "/api/chuyennganhapi/getbyid?id=" + id,
+            success: function (result) {
+                if (handle == 1) {
+                    $('#modalEdit_Id').val(result.id);
+                    $('#modalEdit_Name').val(result.name);
+                    $('#modalEdit_Description').val(result.description);
+                } else {
+                    $('#modalDelete_Id').val(result.id);
+                    $('#modalDelete_Name').val(result.name);
+                    $('#modalDelete_Description').val(result.description);
+                }
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+    }
+
+    function update() {
+        //prepare data
+        var param1 = $('#modalEdit_Id').val();
+        var param2 = $('#modalEdit_Name').val();
+        var param3 = $('#modalEdit_Description').val();
+        var obj = { "id": param1, "name": param2, "description": param3 };
+
+        //put data
+        $.ajax({
+            type: "PUT",
+            url: "/api/chuyennganhapi/updatespc",
+            dataType: 'json',
+            data: JSON.stringify(obj),
+            contentType: 'application/json',
+            success: function (result) {
+                showMessage(result.message);
+                goToPage(1);
+            },
+            error: function (result) {
+                showMessage(result.message);
+            },
+        });
+    }
+    function remove() {
+        //prepare data
+        var param1 = $('#modalDelete_Id').val();
+
+        //put data
+        $.ajax({
+            type: "DELETE",
+            url: "/api/chuyennganhapi/deletespc?id=" + param1,
+            dataType: 'json',
+            //data: JSON.stringify(obj),
+            contentType: 'application/json',
+            success: function (result) {
+                showMessage(result.message);
+                goToPage(1);
+            },
+            error: function (result) {
+                showMessage(result.message);
+            },
+        });
+    }
+
+</script>

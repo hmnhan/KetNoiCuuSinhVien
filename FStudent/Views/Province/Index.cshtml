@@ -1,0 +1,177 @@
+﻿@model FStudent.Models.ViewModels.ProvinceVM
+@{
+    ViewData["Title"] = "Tỉnh";
+}
+<div class="container p-3">
+    <div class="flex-row d-flex mb-2">
+        <div class="w-50">
+            <h2 class="text-primary">Tỉnh</h2>
+        </div>
+        <div class="w-50 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreate">
+                <img width="30" height="30" src="https://img.icons8.com/doodle/48/fa314a/add.png" />
+                <span class="mt-1"> Tạo mới</span>
+            </button>
+            @*Modal*@
+            <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered justify-content-center">
+                    <form method="post" asp-action="Create">
+                        <div class="modal-content p-3" style="width: 550px;">
+                            <div class="form-group flex-row d-flex justify-content-center mb-2">
+                                <h2 class="text-info">Thêm mới tỉnh</h2>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label asp-for="Province.Name" class="my-auto"></label><b class="text-danger"> *</b>
+                                    </div>
+                                    <div class="w-75">
+                                        <input  asp-for="Province.Name" class="form-control" />
+                                        <span asp-validation-for="Province.Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex flex-row justify-content-end my-0">
+                                    <div class="w-25"></div>
+                                    <div class="w-75 d-flex">
+                                        <button type="button" class="btn btn-success w-50 mr-2" data-dismiss="modal">Đóng</button>
+                                        <input type="submit" class="btn btn-primary w-50" value="Tạo" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    @* Keep this empty *@
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="flex-row d-flex mb-2">
+        <a asp-controller="Province" asp-action="IndexCity">Tất cả Quận/Huyện/Thành phố</a>
+    </div>
+
+    @if (Model.Provinces.Count() > 0)
+    {
+        var stt = 0;
+        <table class="table table-bordered table-striped result-table w-100">
+            <thead class="text-center text-nowrap thead-light">
+                <tr>
+                    <th class="align-middle w-25">STT</th>
+                    <th class="align-middle">Tên tỉnh</th>
+                    <th class="align-middle w-25">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.Provinces)
+                {
+                    stt++;
+                    Model.Province = obj;
+                    <tr>
+                        <td class="align-middle"> @stt </td>
+                        <td class="align-middle text-left text-break"><a asp-action="IndexCityWithId" asp-route-id="@Model.Province.Id">@Model.Province.Name</a></td>
+                        <td class="text-center align-middle">
+                            <div class="d-flex flex-row justify-content-center">
+                                <div class="">
+                                    <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalEdit-@Model.Province.Id">
+                                        Sửa
+                                    </button>
+                                </div>
+                                @*Modal edit*@
+                                <div class="modal fade" id="modalEdit-@Model.Province.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered justify-content-center">
+                                        <form method="post" asp-action="Edit">
+                                            <div class="modal-content p-3" style="width: 550px;">
+                                                <input asp-for="Province.Id" hidden />
+                                                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                                                    <h2 class="text-info">Sửa thông tin tỉnh</h2>
+                                                </div>
+                                                
+                                                <div class="d-flex flex-column">
+                                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                                        <div class="w-25 pl-2">
+                                                            <label asp-for="Province.Name" class="my-auto"></label><b class="text-danger"> *</b>
+                                                        </div>
+                                                        <div class="w-75">
+                                                            <input  asp-for="Province.Name" class="form-control" />
+                                                            <span asp-validation-for="Province.Name" class="text-danger"></span>
+                                                        </div>
+                                                    </div>   
+                                                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                                                        <div class="w-25"></div>
+                                                        <div class="w-75 d-flex">
+                                                            <button type="button" class="btn btn-success w-50 mr-2" data-dismiss="modal">Đóng</button>
+                                                            <input type="submit" class="btn btn-info w-50" value="Cập nhật" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    @* Keep this empty *@
+                                                </div>
+                                                
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+ 
+                                <div class="">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete-@Model.Province.Id">
+                                        Xóa
+                                    </button>
+                                </div>
+
+                                @*Modal delete*@
+                                <div class="modal fade" id="modalDelete-@Model.Province.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered justify-content-center">
+                                        <form method="post" asp-action="Delete">
+                                            <div class="modal-content p-3" style="width: 550px;">
+                                                <input asp-for="Province.Id" hidden />
+                                                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                                                    <h4 class="text-danger">Xóa tỉnh và thành phố liên quan</h4>
+                                                </div>
+                                                <div class="d-flex flex-column">
+                                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                                        <div class="w-25 pl-2">
+                                                            <label asp-for="Province.Name" class="my-auto"></label>
+                                                        </div>
+                                                        <div class="w-75">
+                                                            <input  asp-for="Province.Name" disabled class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                                                        <div class="w-25"></div>
+                                                        <div class="w-75 d-flex">
+                                                            <button type="button" class="btn btn-success mr-2 w-50" data-dismiss="modal"> Đóng</button>
+                                                            <input type="submit" class="btn btn-danger w-50" value="Xác nhận" >
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    @*Keep this empty*@
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                @*end modal*@
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p> Chưa có tỉnh nào được tạo.</p>
+    }
+</div>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

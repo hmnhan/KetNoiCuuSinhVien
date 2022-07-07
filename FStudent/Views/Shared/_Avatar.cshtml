@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown header-profile">
+        <a class="nav-link" href="#" role="button" data-toggle="dropdown" data-target="#login_dropdown">
+            <div id="avtprofile" class="flex-row d-flex">
+                <img src="~/images/avtadmin/default.png" alt="" class="mr-2 d-flex" width="32" height="32">
+                <div class="d-flex align-items-center">@UserManager.GetUserName(User)</div>
+            </div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" id="login_dropdown">
+            <a asp-controller="Home" asp-action="Profile" title="Thông tin cá nhân" class="dropdown-item">
+                <i class="icon-user"></i>
+                <span class="ml-2">Thông tin cá nhân</span>
+            </a>
+            <a asp-controller="Home" asp-action="Password" title="Đổi mật khẩu" class="dropdown-item">
+                <i class="icon-user"></i>
+                <span class="ml-2">Đổi mật khẩu</span>
+            </a>
+            <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="~/login">
+                @*<input id="logout" type="submit" class="ml-2" value="Đăng xuất"/>*@
+            </form>
+            <a class="dropdown-item" href="javascript:{}" onclick="document.getElementById('logoutForm').submit();">
+                <i class="icon-key"></i>
+                <span class="ml-2">Đăng xuất</span>
+            </a>
+        </div>
+    </li>
+ }

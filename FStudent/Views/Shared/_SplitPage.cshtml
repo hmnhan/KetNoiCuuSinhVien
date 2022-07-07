@@ -1,0 +1,73 @@
+﻿<script>
+    function showPageScroll(pageIndex, pageCount) {
+        s = ``;
+        if (pageCount > 0) {
+            if (pageIndex == 1) {
+                s += `<li class="page-item disabled">
+                                <a class="page-link"><</a>
+                            </li>`;
+            }
+            else {
+                s += `<li class="page-item">
+                                <a class="page-link" onclick="goToPage(${pageIndex - 1});" style="cursor: pointer;"><</a>
+                            </li>`;
+            }
+            if (pageCount <= 5) {
+                for (var i = 1; i <= pageCount; i++) {
+                    if (i != pageIndex) {
+                        s += `<li class="page-item"><a class="page-link" onclick="goToPage(${i});" style="cursor: pointer;">${i}</a></li>`;
+                    }
+                    else {
+                        s += `<li class="page-item active"><a class="page-link" onclick="goToPage(${i});" style="cursor: pointer;">${i}</a></li>`;
+                    }
+
+                }
+            }
+            else {
+                var min = pageIndex - 2;
+                var max = pageIndex + 2;
+                while (min < 1) {
+                    min++;
+                    max++;
+                }
+                while (max > pageCount) {
+                    min--;
+                    max--;
+                }
+                if (min != 1) {
+                    s += `<li class="page-item"><a class="page-link" onclick="goToPage(1);" style="cursor: pointer;">1</a></li>`;
+                    if (min > 2) {
+                        s += `<li class="page-item disabled"><div class="page-link">...</div></li>`;
+                    }
+                }
+                for (var i = min; i <= max; i++) {
+                    if (i != pageIndex) {
+                        s += `<li class="page-item"><a class="page-link" onclick="goToPage(${i});" style="cursor: pointer;">${i}</a></li>`;
+                    }
+                    else {
+                        s += `<li class="page-item active"><a class="page-link" onclick="goToPage(${i});" style="cursor: pointer;">${i}</a></li>`;
+                    }
+
+                }
+                if (max != pageCount) {
+                    if (max < pageCount - 1) {
+                        s += `<li class="page-item disabled"><div class="page-link">...</div></li>`;
+                    }
+                    s += `<li class="page-item"><a class="page-link" onclick="goToPage(${pageCount});" style="cursor: pointer;">${pageCount}</a></li>`;
+                }
+            }
+
+            if (pageIndex == pageCount) {
+                s += `<li class="page-item disabled">
+                                <a class="page-link">></a>
+                            </li>`;
+            }
+            else {
+                s += `<li class="page-item">
+                                <a class="page-link" onclick="goToPage(${pageIndex + 1});" style="cursor: pointer;">></a>
+                            </li>`;
+            }
+        }
+        $('#splitPage').html(s);
+    }
+</script>

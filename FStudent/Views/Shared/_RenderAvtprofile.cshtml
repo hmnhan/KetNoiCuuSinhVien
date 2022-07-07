@@ -1,0 +1,24 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: '/api/home/renderavtprofile',
+            success: function (result) {
+                var s = ``;
+                var position = result.position1;
+                for (var i = 0; i < position.length; i++) {
+                    s += `<li class="bg-gray p-2">
+                                <a href="/tin-tuc/` + position[i].id + `&&0.html">`
+                                    + position[i].title +
+                                `</a>
+                            </li>`;    
+                }
+                $('#boxPs1').html(s);
+
+            }
+        });
+
+            
+
+    });
+</script>

@@ -1,0 +1,327 @@
+﻿@{
+    ViewData["Title"] = "Kết quả tìm kiếm";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<div class="container-fluid p-3 w-75">
+    <div class="flex-row d-flex">
+        <div class="w-50">
+            <h2 class="text-primary">Thông tin cựu sinh viên</h2>
+        </div>
+        <div class="w-50 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateList">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-filter-circle mr-1" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path d="M7 11.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 0 1h-1a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z" />
+                </svg>
+                <span class="mt-1"> Bộ lọc</span>
+            </button>
+        </div>
+    </div>
+    <div class="flex-row d-flex my-2">
+        <div class="w-25 d-flex flex-row align-items-center justify-content-start">
+            Hiển thị
+            <select id="pagesize" onchange="goToPage(1);" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                <option value="1">1</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+            dữ liệu
+        </div>
+        <div class="w-75 d-flex flex-row align-items-center justify-content-end">
+            <input id="searchstring" placeholder="Tên/Biệt hiệu" type="text" class="form-control form-control-sm w-auto mr-2" />
+            <button class="btn btn-primary btn-sm text-nowrap" onclick="goToPage(1)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search mb-1" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+                <span class="my-auto"> Tìm</span>
+            </button>
+        </div>
+    </div>
+
+
+    <table class="table table-bordered table-hover mb-2 w-100">
+        <thead class="text-center text-nowrap thead-light">
+            <tr>
+                <th class="align-middle w-5">
+                    STT
+                </th>
+                <th class="align-middle w-75">
+                    Họ tên
+                </th>
+                <th class="align-middle w-25">
+                    Biệt hiệu
+                </th>
+                <th class="align-middle">
+                    Chi tiết
+                </th>
+            </tr>
+        </thead>
+        <tbody id="data">
+            @*Render data here*@
+        </tbody>
+    </table>
+    <div class="flex-row d-flex align-items-start my-2">
+        <div id="message" class="w-50 d-flex flex-row justify-content-start text-danger">
+            @*Đây là nơi hiện thông báo*@
+        </div>
+        <div class="w-50 d-flex flex-row justify-content-end">
+            <div id="resultmessage" class="w-auto d-flex flex-row justify-content-end text-danger mr-2">
+                @*Đây là nơi hiện số kết quả*@
+            </div>
+            <ul class="my-auto pagination pagination-sm" id="splitPage">
+            </ul>
+        </div>
+    </div>
+</div>
+@*Modal Create*@
+<div class="modal fade" id="modalCreateList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <form>
+            <div class="modal-content p-3" style="width: 650px;">
+                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                    <h2 class="text-info">Lọc thông tin</h2>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Loại hình đào tạo</label>
+                        </div>
+                        <div class="w-75">
+                            <select id="modalFilter_EducationType" class="form-control">
+                                <option value="-1" selected>--Tất cả--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Chuyên ngành</label>
+                        </div>
+                        <div class="w-75">
+                            <select id="modalFilter_Specialization" class="form-control">
+                                <option value="-1" selected>--Tất cả--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Niên khóa</label>
+                        </div>
+                        <div class="w-75">
+                            <select id="modalFilter_AcademicYear" class="form-control" disabled>
+                                <option value="-1" selected>--Tất cả--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Lớp sinh hoạt</label>
+                        </div>
+                        <div class="w-75">
+                            <select id="modalFilter_ActivityClass" class="form-control" disabled>
+                                <option value="-1" selected>--Tất cả--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                        <div class="w-25"></div>
+                        <div class="w-75 d-flex">
+                            <button type="button" class="btn btn-success w-50 mr-2" data-dismiss="modal">Đóng</button>
+                            <button type="button" onclick="goToPage(1)" class="btn btn-primary w-50">Tìm kiếm</button>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        @* Keep this empty *@
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@*Modal*@
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <form>
+            <div class="modal-content p-3" style="width: 850px;">
+                <div class="flex-row d-flex mb-3">
+                    <div class="w-50">
+                        <h2 class="text-primary">Thông tin cá nhân</h2>
+                    </div>
+                    <div class="w-50 d-flex align-middle justify-content-end text-danger">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Tổng quan</a>
+                            <a class="nav-link" id="v-pills-education-tab" data-toggle="pill" href="#v-pills-education" role="tab" aria-controls="v-pills-education" aria-selected="false">Công việc và học vấn</a>
+                            <a class="nav-link" id="v-pills-address-tab" data-toggle="pill" href="#v-pills-address" role="tab" aria-controls="v-pills-address" aria-selected="false">Công việc</a>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="tab-content" id="v-pills-tabContent">
+                            <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                <div class="d-flex flex-column">
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Họ tên</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_fullName">
+                                            @*Hoàng Minh Nhân*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Tên thường gọi</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_nickName">
+                                            @*Hoàng Nhân*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Ngày sinh</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_dateOfBirth">
+                                            @*21/10/2000*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Giới tính</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_gender">
+                                            @*Nam*@
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                                            <div class="w-25 pl-2">
+                                                <label class="my-auto text-info">Số điện thoại</label>
+                                            </div>
+                                            <div class="w-75" id="modalInfor_phoneNumber">
+                                                @*0358140349*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                                            <div class="w-25 pl-2">
+                                                <label class="my-auto text-info">Email</label>
+                                            </div>
+                                            <div class="w-75" id="modalInfor_email">
+                                                @*hoangminhnhan112@gmail.com*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                                            <div class="w-25 pl-2">
+                                                <label class="my-auto text-info">Skype</label>
+                                            </div>
+                                            <div class="w-75" id="modalInfor_skype">
+                                                @*Trống*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                                            <div class="w-25 pl-2">
+                                                <label class="my-auto text-info">Zalo</label>
+                                            </div>
+                                            <div class="w-75" id="modalInfor_zalo">
+                                                @*Trống*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                                            <div class="w-25 pl-2">
+                                                <label class="my-auto text-info">Facebook</label>
+                                            </div>
+                                            <div class="w-75" id="modalInfor_facebook">
+                                                @*Link*@
+                                            </div>
+                                        </div>
+                                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                                            <div class="w-25 pl-2">
+                                                <label class="my-auto text-info">LinkedIn</label>
+                                            </div>
+                                            <div class="w-75" id="modalInfor_linkedIn">
+                                                @*Trống*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Giới thiệu</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_about">
+                                            @*best fo4*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-education" role="tabpanel" aria-labelledby="v-pills-education-tab">
+                                <div class="d-flex flex-column">
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Hệ đào tạo</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_eduType">
+                                            Hoàng Minh Nhân
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Chuyên ngành</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_spc">
+                                            Hoàng Nhân
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Khóa học</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_acaYear">
+                                            21/10/2000
+                                        </div>
+                                    </div>
+                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                        <div class="w-25 pl-2">
+                                            <label class="my-auto text-info">Lớp sinh hoạt</label>
+                                        </div>
+                                        <div class="w-75" id="modalInfor_actClass">
+                                            Nam
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
+                                <div class="d-flex flex-column" id="modalInfor_work">
+                                    @*Hien thi thong tin lam viec*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 96%;
+        background-color: #000000;
+        height: 0.5px;
+    }
+</style>
+@*end modal*@
+@section Scripts{
+
+    @{
+        <partial name="~/Views/Home/Scripts/IndexScripts2.cshtml" />
+    }
+
+}

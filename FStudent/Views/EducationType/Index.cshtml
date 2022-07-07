@@ -1,0 +1,230 @@
+﻿@model FStudent.Models.ViewModels.EducationTypeVM
+@{
+    ViewData["Title"] = "Loại hình đào tạo";
+}
+<div class="container-fluid px-0">
+    <div class="flex-row d-flex">
+        <div class="w-50">
+            <h2 class="text-primary">Loại hình đào tạo</h2>
+        </div>
+        <div class="w-50 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreateList">
+                <img width="30" height="30" src="https://img.icons8.com/doodle/48/fa314a/add.png" />
+                <span class="mt-1"> Tạo mới</span>
+            </button>
+        </div>
+
+    </div>
+    <div class="flex-row d-flex my-2">
+        <div class="w-50 d-flex flex-row align-items-center justify-content-start">
+            Hiển thị
+            <select id="pagesize" onchange="goToPage(1);" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                <option value="1">1</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+            </select>
+            dữ liệu
+        </div>
+        <div class="w-50 d-flex flex-row align-items-center justify-content-end">
+            <input id="searchstring" placeholder="Tên/từ khóa" type="text" class="form-control form-control-sm w-50 mr-2" />
+            <button class="btn btn-primary btn-sm text-nowrap" onclick="goToPage(1)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search mb-1" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                </svg>
+                <span class="my-auto"> Tìm</span>
+            </button>
+        </div>
+    </div>
+    <table class="table table-bordered table-hover mb-2 w-100">
+        <thead class="text-center text-nowrap thead-light">
+            <tr>
+                <th class="align-middle">STT</th>
+                <th class="align-middle w-25">Tên loại hình đào tạo</th>
+                <th class="align-middle w-50">Từ khóa</th>
+                <th class="align-middle">Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="data">
+            @*Render data here*@
+        </tbody>
+    </table>
+    <div class="flex-row d-flex align-items-start my-2">
+        <div id="message" class="w-50 d-flex flex-row justify-content-start text-danger">
+            @*Đây là nơi hiện thông báo*@
+        </div>
+        <div class="w-50 d-flex flex-row justify-content-end">
+            <div id="resultmessage" class="w-auto d-flex flex-row justify-content-end text-danger mr-2">
+                @*Đây là nơi hiện số kết quả*@
+            </div>
+            <ul class="my-auto pagination pagination-sm" id="splitPage">
+            </ul>
+        </div>
+    </div>
+</div>
+@*Modal Create*@
+<div class="modal fade" id="modalCreateList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <form method="post">
+            <div class="modal-content p-3" style="width: 1000px;">
+                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                    <h2 class="text-info">Thêm loại hình đào tạo</h2>
+                </div>
+                <div class="flex-row d-flex justify-content-start text-danger" id="modalCreateMessage">
+                </div>
+                <table class="table table-bordered table-hover mb-2 w-100" id="tableCreateList">
+                    <thead class="text-center text-nowrap thead-light">
+                        <tr>
+                            <th class="align-middle w-25">Tên LHĐT</th>
+                            <th class="align-middle w-50">Từ khóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="createList">
+                        <tr>
+                            <td class="align-middle text-left text-break">
+                                <input type="text" class="form-control" />
+                            </td>
+                            <td class="align-middle text-left text-break">
+                                <input type="text" class="form-control" />
+                            </td>
+                        </tr>
+                        @*Render data here*@
+                    </tbody>
+                </table>
+                <div class="flex-row d-flex">
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="addRow()" cursor="pointer" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" onclick="removeRow()" cursor="pointer" width="16" height="16" fill="currentColor" class="bi bi-dash-circle ml-1" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z" />
+                    </svg>
+                </div>
+                <script>
+                    function addRow() {
+                        var row = `<tr>
+                                                                                    <td class="align-middle text-left text-break">
+                                                                                        <input type="text" class="form-control" />
+                                                                                    </td>
+                                                                                    <td class="align-middle text-left text-break">
+                                                                                        <input type="text" class="form-control" />
+                                                                                    </td>
+                                                                                </tr>`;
+                        $('#createList').append(row);
+                    }
+
+                    function removeRow() {
+                        var table = document.getElementById('tableCreateList');
+                        var rowCount = table.rows.length;
+                        if (rowCount > 1)
+                            table.deleteRow(-1);
+                    }
+                </script>
+                <div class="form-group flex-row d-flex justify-content-end mb-2">
+                    <button type="button" class="btn btn-success w-10 mr-2" data-dismiss="modal">Đóng</button>
+                    <button type="button" onclick="create()" class="btn btn-primary w-10">Tạo</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@*Modal edit*@
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <form method="post">
+            <div class="modal-content p-3" style="width: 450px;">
+                <input id="modalEdit_Id" hidden />
+                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                    <h2 class="text-info">Sửa loại hình đào tạo</h2>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto"></label><b class="text-danger">Tên*</b>
+                        </div>
+                        <div class="w-75">
+                            <input id="modalEdit_Name" class="form-control" />
+                            <span id="modalEdit_Validate_Name" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Từ khóa</label>
+                        </div>
+                        <div class="w-75">
+                            <input id="modalEdit_Description" class="form-control" />
+                            <span id="modalEdit_Validate_Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                        <div class="w-25"></div>
+                        <div class="w-75 d-flex">
+                            <button type="button" class="btn btn-success w-50 mr-2" data-dismiss="modal">Đóng</button>
+                            <button type="button" onclick="update()" class="btn btn-info w-50">Cập nhật</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+@*Modal delete*@
+<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <form method="post">
+            <div class="modal-content p-3" style="width: 450px;">
+                <input id="modalDelete_Id" hidden />
+                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                    <h4 class="text-danger">Xóa loại hình đào tạo</h4>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Tên</label>
+                        </div>
+                        <div class="w-75">
+                            <input id="modalDelete_Name" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                        <div class="w-25 pl-2">
+                            <label class="my-auto">Từ khóa</label>
+                        </div>
+                        <div class="w-75">
+                            <input id="modalDelete_Description" disabled class="form-control" />
+                        </div>
+                    </div>
+                    <div class="flex-row d-flex justify-content-start text-danger pl-2 mb-2">
+                        Lưu ý: Thao tác này không thể khôi phục
+                    </div>
+                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                        <div class="w-25"></div>
+                        <div class="w-75 d-flex">
+                            <button type="button" class="btn btn-success mr-2 w-50" data-dismiss="modal"> Đóng</button>
+                            <button type="button" onclick="remove()" class="btn btn-danger w-50">Xác nhận</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    @*Keep this empty*@
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+        <partial name="~/Views/EducationType/Scripts/IndexScripts.cshtml" />
+    }
+
+}

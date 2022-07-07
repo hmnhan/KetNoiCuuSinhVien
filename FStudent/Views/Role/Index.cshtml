@@ -1,0 +1,182 @@
+﻿@model FStudent.Models.ViewModels.RoleVM
+@{
+    ViewData["Title"] = "Vai trò hệ thống";
+}
+<div class="container p-3">
+    <div class="flex-row d-flex mb-2">
+        <div class="w-50">
+            <h2 class="text-primary">Vai trò hệ thống</h2>
+        </div>
+        @*<div class="w-50 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalCreate">
+                <img width="30" height="30" src="https://img.icons8.com/doodle/48/fa314a/add.png" />
+                <span class="mt-1"> Tạo mới</span>
+            </button>
+
+            <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered justify-content-center">
+                    <form method="post" asp-action="Create">
+                        <div class="modal-content p-3" style="width: 550px;">
+                            <div class="form-group flex-row d-flex justify-content-center mb-2">
+                                <h2 class="text-info">Thêm vai trò</h2>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto">Tên vai trò<b class="text-danger"> *</b></label>
+                                    </div>
+                                    <div class="w-75">
+                                        <input asp-for="IdentityRole.Name" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex flex-row justify-content-end my-0">
+                                    <div class="w-25"></div>
+                                    <div class="w-75 d-flex">
+                                        <button type="button" class="btn btn-success w-50 mr-2" data-dismiss="modal">Đóng</button>
+                                        <input type="submit" class="btn btn-primary w-50" value="Tạo" />
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>*@
+        
+    </div>
+
+    @if (Model.IdentityRoles.Count() > 0)
+    {
+        var stt = 0;
+        <table class="table table-bordered table-striped result-table w-100">
+            <thead class="text-center text-nowrap thead-light">
+                <tr>
+                    <th class="align-middle">STT</th>
+                    <th class="align-middle">Vai trò</th>
+                    @*<th class="align-middle">Thao tác</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.IdentityRoles)
+                {
+                    stt++;
+                    Model.IdentityRole = obj;
+                    <tr>
+                        <td class="align-middle"> @stt </td>
+                        <td class="align-middle text-left text-break">@Model.IdentityRole.Name</td>
+                        @*<td class="text-center align-middle">
+                            <div class="d-flex flex-row justify-content-center">
+                                <div class="">
+                                    <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalEdit-@Model.IdentityRole.Id">
+                                        Sửa
+                                    </button>
+                                </div>
+
+                                <div class="modal fade" id="modalEdit-@Model.IdentityRole.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered justify-content-center">
+                                        <form method="post" asp-action="Edit">
+                                            <div class="modal-content p-3" style="width: 450px;">
+                                                <input asp-for="IdentityRole.Id" hidden />
+                                                <input asp-for="IdentityRole.NormalizedName" hidden />
+                                                <input asp-for="IdentityRole.ConcurrencyStamp" hidden />
+                                                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                                                    <h2 class="text-info">Sửa loại hình đào tạo</h2>
+                                                </div>
+                                                
+                                                <div class="d-flex flex-column">
+                                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                                        <div class="w-25 pl-2">
+                                                            <label asp-for="IdentityRole.Name" class="my-auto"></label><b class="text-danger"> *</b>
+                                                        </div>
+                                                        <div class="w-75">
+                                                            <input  asp-for="IdentityRole.Name" class="form-control" />
+                                                            <span asp-validation-for="IdentityRole.Name" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                      
+                                                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                                                        <div class="w-25"></div>
+                                                        <div class="w-75 d-flex">
+                                                            <button type="button" class="btn btn-success w-50 mr-2" data-dismiss="modal">Đóng</button>
+                                                            <input type="submit" class="btn btn-info w-50" value="Cập nhật" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+
+                                                </div>
+                                                
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+ 
+                                <div class="">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete-@Model.IdentityRole.Id">
+                                        Xóa
+                                    </button>
+                                </div>
+
+     
+                                <div class="modal fade" id="modalDelete-@Model.IdentityRole.Id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered justify-content-center">
+                                        <form method="post" asp-action="Delete">
+                                            <div class="modal-content p-3" style="width: 450px;">
+                                                <input asp-for="IdentityRole.Id" hidden />
+                                                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                                                    <h4 class="text-danger">Xóa loại hình đào tạo</h4>
+                                                </div>
+                                                <div class="d-flex flex-column">
+                                                    <div class="form-group d-flex text-left mb-2 align-items-center">
+                                                        <div class="w-25 pl-2">
+                                                            <label asp-for="IdentityRole.Name" class="my-auto"></label>
+                                                        </div>
+                                                        <div class="w-75">
+                                                            <input  asp-for="IdentityRole.Name" disabled class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex text-left mb-3 align-items-center">
+                                                        <div class="w-25 pl-2">
+                                                            <label asp-for="IdentityRole.NormalizedName" class="my-auto"></label>
+                                                        </div>
+                                                        <div class="w-75">
+                                                            <input asp-for="IdentityRole.NormalizedName" disabled class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group d-flex flex-row justify-content-end my-0">
+                                                        <div class="w-25"></div>
+                                                        <div class="w-75 d-flex">
+                                                            <button type="button" class="btn btn-success mr-2 w-50" data-dismiss="modal"> Đóng</button>
+                                                            <input type="submit" class="btn btn-danger w-50" value="Xác nhận" >
+                                                        </div> 
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p> No education type exists.</p>
+    }
+</div>
+
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+}

@@ -1,0 +1,262 @@
+﻿<partial name="_GetFunction" />
+<partial name="_SplitPage" />
+<script>
+    $(document).ready(function () {
+        //Load searchselectlist
+        loadSpecializationFilter();
+        loadEducationTypeFilter();
+        goToPage(1);
+        
+        
+    });
+
+    function getUrlActClass(pageIndex) {
+        var pageSize = $('#pagesize').val();
+        var eduTypeId = $('#modalFilter_EducationType').val();
+        var spcId = $('#modalFilter_Specialization').val();
+        var acaYearId = $('#modalFilter_AcademicYear').val();
+        var actClassId = $('#modalFilter_ActivityClass').val();
+
+        eduTypeId = eduTypeId == -1 || eduTypeId == null ? "" : '&eduTypeId=' + eduTypeId;
+        spcId = spcId == -1 || spcId == null ? "" : '&spcId=' + spcId;
+        acaYearId = acaYearId == -1 || acaYearId == null ? "" : '&acaYearId=' + acaYearId;
+        actClassId = actClassId == -1 || actClassId == null ? "" : '&actClassId=' + actClassId;
+
+        return '/api/thongtinapi/getall'
+            + '?pageIndex=' + pageIndex
+            + '&pageSize=' + pageSize
+            + eduTypeId
+            + spcId
+            + acaYearId
+            + actClassId;
+    }
+
+    function goToPage(pageIndex) {
+        $.ajax({
+            type: "GET",
+            url: getUrlActClass(pageIndex),
+            success: function (result) {
+                //$('#message').html(JSON.stringify(result));
+
+                var data = result.data;
+
+                var items = data.items;
+                var s = ``;
+                for (var i = 0; i < items.length; i++) {
+                    s += `<tr><td class="align-middle text-center"> ${(i + 1) + (data.pageIndex - 1) * data.pageSize} </td>
+                            <td class="align-middle text-left text-break">
+                                ${items[i].fullName}
+                            </td>
+                            <td class="align-middle text-left text-break">
+                                ${items[i].dateOfBirth}
+                            </td>
+                            <td class="align-middle text-left text-break">
+                                ${items[i].phoneNumber}
+                            </td>
+                            <td class="align-middle text-left text-break">
+                                ${items[i].email}
+                            </td>
+                            <td class="text-center align-middle">
+                                <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalEdit" onclick="getDetail('${items[i].id}')">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                    </svg>
+                                </button>
+                            </td></tr>`;
+                }
+                $('#data').html(s);
+
+                $('#resultmessage').html(`Đã hiển thị ${items.length} trong số ${data.totalRecords} kết quả`);
+                showPageScroll(data.pageIndex, data.pageCount);
+            },
+            error: function () {
+                $('#message').html("Tải danh sách các thông tin thất bại");
+            }
+        });
+    }
+
+    function showMessage(str) {
+        $('#message').html(str);
+    }
+
+    function getDetail(id) {
+        $.ajax({
+            type: "GET",
+            url: "/api/thongtinapi/getdetail?id=" + id,
+            success: function (result) {
+
+                //Hien thi profile
+                var profile = result.profile;
+                $('#modalInfor_fullName').html(profile.fullName);
+                $('#modalInfor_nickName').html(profile.nickName);
+                $('#modalInfor_dateOfBirth').html(profile.dateOfBirth);
+                $('#modalInfor_gender').html(profile.gender.shortDesc);
+                $('#modalInfor_phoneNumber').html(profile.phoneNumber);
+                $('#modalInfor_email').html(profile.email);
+                $('#modalInfor_skype').html(profile.skype);
+                $('#modalInfor_zalo').html(profile.zalo);
+                $('#modalInfor_facebook').html(profile.facebook);
+                $('#modalInfor_linkedIn').html(profile.linkedIn);
+                $('#modalInfor_about').html(profile.about);
+
+                //Hien thi hoc van
+                $('#modalInfor_eduType').html(result.educationType.name);
+                $('#modalInfor_acaYear').html(result.academicYear.name);
+                $('#modalInfor_spc').html(result.specialiaztion.name);
+                $('#modalInfor_actClass').html(result.activityClass.name);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+
+        $.ajax({
+            type: "GET",
+            url: "/api/thongtinapi/getdetailwk?id=" + id,
+            success: function (result) {
+                console.log(result);
+                var s = ``;
+                for (var i = 0; i < result.length; i++) {
+                    s += `<div class="form-group d-flex text-left mb-2 align-items-center">
+                            <div class="w-25 pl-2">
+                                <label class="my-auto text-info">Nơi làm việc</label>
+                            </div>
+                            <div class="w-75">
+                                ${result[i].workplace}
+                            </div>
+                        </div>
+                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                            <div class="w-25 pl-2">
+                                <label class="my-auto text-info">Năm bắt đầu</label>
+                            </div>
+                            <div class="w-75">
+                                ${result[i].startYear}
+                            </div>
+                        </div>
+                        <div class="form-group d-flex text-left mb-2 align-items-center">
+                            <div class="w-25 pl-2">
+                                <label class="my-auto text-info">Năm kết thúc</label>
+                            </div>
+                            <div class="w-75">
+                                ${result[i].endYear}
+                            </div>
+                        </div>
+                        <hr>`;
+                }
+
+                $('#modalInfor_work').html(s);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+    }
+
+    //Load Filter
+    function loadSpecializationFilter() {
+        $.ajax({
+            type: "GET",
+            url: "/api/thongtinapi/getspc",
+            success: function (result) {
+                var s = `<option value="-1" selected>--Tất cả--</option>`;
+                for (var i = 0; i < result.length; ++i) {
+                    s += `<option value="${result[i].id}">${result[i].name}</option>`;
+                }
+
+                $('#modalFilter_Specialization').html(s);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+
+    }
+
+    function loadEducationTypeFilter() {
+        $.ajax({
+            type: "GET",
+            url: "/api/thongtinapi/getet",
+            success: function (result) {
+                var s = `<option value="-1" selected>--Tất cả--</option>`;
+                for (var i = 0; i < result.length; ++i) {
+                    s += `<option value="${result[i].id}">${result[i].name}</option>`;
+                }
+
+                $('#modalFilter_EducationType').html(s);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+
+    }
+
+    function loadAcademicYearFilter() {
+        var eduTypeId = $('#modalFilter_EducationType').val();
+        $.ajax({
+            type: "GET",
+            url: "/api/thongtinapi/getay?eduTypeId=" + eduTypeId,
+            success: function (result) {
+                var s = `<option value="-1" selected>--Tất cả--</option>`;
+                for (var i = 0; i < result.length; ++i) {
+                    s += `<option value="${result[i].id}">${result[i].name}</option>`;
+                }
+
+                $('#modalFilter_AcademicYear').html(s);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+
+    }
+
+    //SelectFilter Onchange
+    $('#modalFilter_EducationType').change(function () {
+        if ($('#modalFilter_EducationType').val() != -1) {
+            $('#modalFilter_AcademicYear').removeAttr('disabled');
+            loadAcademicYearFilter();
+            if ($('#modalFilter_Specialization').val() != -1) {
+
+            }
+        } else {
+            $('#modalFilter_AcademicYear').html('<option value="-1" selected>--Tất cả--</option>');
+            $('#modalFilter_AcademicYear').attr('disabled', 'disabled');
+        }
+    });
+
+    $('#modalFilter_AcademicYear').change(function () {
+        changeStageActivityClass();
+    });
+    $('#modalFilter_Specialization').change(function () {
+        changeStageActivityClass();
+    });
+
+    function changeStageActivityClass() {
+        if ($('#modalFilter_AcademicYear').val() != -1 && $('#modalFilter_Specialization').val() != -1 && $('#modalFilter_EducationType').val() != -1) {
+            $('#modalFilter_ActivityClass').removeAttr('disabled');
+
+            var acaYearId = $('#modalFilter_AcademicYear').val();
+            var spcId = $('#modalFilter_Specialization').val();
+            $.ajax({
+                type: "GET",
+                url: "/api/thongtinapi/getac?acaYearId=" + acaYearId + "&spcId=" + spcId,
+                success: function (result) {
+                    var s = `<option value="-1" selected>--Tất cả--</option>`;
+                    for (var i = 0; i < result.length; ++i) {
+                        s += `<option value="${result[i].id}">${result[i].name}</option>`;
+                    }
+
+                    $('#modalFilter_ActivityClass').html(s);
+                },
+                error: function () {
+                    $('#message').html("Api lỗi");
+                }
+            });
+        } else {
+            $('#modalFilter_ActivityClass').attr('disabled', 'disabled');
+            $('#modalFilter_ActivityClass').html('<option value="-1" selected>--Tất cả--</option>');
+        }
+    }
+</script>

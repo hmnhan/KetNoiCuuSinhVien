@@ -1,0 +1,141 @@
+﻿<partial name="_GetFunction" />
+<partial name="_SplitPage" />
+<script>
+    $(document).ready(function () {
+        $('#searchstring').keypress(function (e) {
+            var key = e.which;
+            if (key == 13)  // the enter key code
+            {
+                goToPage(1);
+                return false;
+            }
+        });
+        goToPage(1);
+    });
+
+    function goToPage(pageIndex) {
+        var pageSize = $('#pagesize').val();
+        var filter = $('#searchstring').val() == null ? "" : $('#searchstring').val();
+        $.ajax({
+            type: "GET",
+            url: getUrl("/api/taikhoanapi/getadmins", pageIndex, pageSize, filter),
+            success: function (result) {
+
+                var data = result.data;
+
+                var items = data.items;
+                var s = ``;
+                for (var i = 0; i < items.length; i++) {
+                    s += `<tr><td class="align-middle text-center"> ${(i + 1) + (data.pageIndex - 1) * data.pageSize} </td>
+                        <td class="align-middle text-left text-break">${items[i].userName}</td>
+                        <td class="align-middle text-left text-break">${items[i].normalizedUserName}</td>
+                        <td class="text-center align-middle">
+                            <button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#modalEdit" onclick="resetPass('${items[i].id}', '${items[i].userName}')">
+                                Đổi mật khẩu
+                            </button>
+                        </td></tr>`;
+                }
+                $('#data').html(s);
+
+                showPageScroll(data.pageIndex, data.pageCount);
+                $('#resultmessage').html(`Đã hiển thị ${items.length} trong số ${data.totalRecords} kết quả`);
+            },
+            error: function () {
+                $('#message').html("Api lỗi");
+            }
+        });
+    }
+
+    function create() {
+        var userName = $('#modalCreate_UserName').val();
+        var newPassword = $('#modalCreate_Password').val();
+        var retypePassword = $('#modalCreate_RetypePassword').val();
+
+        if (newPassword != retypePassword) {
+            $('#registerMessage').html("Mật khẩu nhập lại không trùng khớp.");
+            return false;
+        }
+        //prepare data
+        var obj = { "userName": userName, "password": newPassword };
+
+        console.log(obj);
+        //put data
+        $.ajax({
+            type: "POST",
+            url: "/api/taikhoanapi/register",
+            dataType: 'json',
+            data: JSON.stringify(obj),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#registerMessage').html(result.message);
+                $('#modalCreate_UserName').val("");
+                $('#modalCreate_Password').val("");
+                $('#modalCreate_RetypePassword').val("");
+                goToPage(1);
+            },
+            error: function (result) {
+                showMessage(result.message);
+            },
+        });
+    }
+
+    function showMessage(str) {
+        $('#message').html(str);
+    }
+
+    function resetPass(id, name) {
+        $('#modalEdit_Id').val(id);
+        $('#modalEdit_UserName').val(name);
+    }
+
+    function update() {
+        var newPassword = $('#modalEdit_Password').val();
+        var retypePassword = $('#modalEdit_RetypePassword').val();
+
+        if (newPassword != retypePassword) {
+            $('#resetMessage').html("Mật khẩu nhập lại không trùng khớp.");
+            return false;
+        }
+        //prepare data
+        var userId = $('#modalEdit_Id').val();
+        var obj = { "userId": userId, "newPassword": newPassword };
+
+        //put data
+        $.ajax({
+            type: "POST",
+            url: "/api/taikhoanapi/resetpw",
+            dataType: 'json',
+            data: JSON.stringify(obj),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#resetMessage').html(result.message);
+                $('#modalEdit_Password').val("");
+                $('#modalEdit_RetypePassword').val("");
+                goToPage(1);
+            },
+            error: function (result) {
+                showMessage(result.message);
+            },
+        });
+    }
+    @*function remove() {
+        //prepare data
+        var param1 = $('#modalDelete_Id').val();
+
+        //put data
+        $.ajax({
+            type: "DELETE",
+            url: "/api/daotaoapi/deleteet?id=" + param1,
+            dataType: 'json',
+            //data: JSON.stringify(obj),
+            contentType: 'application/json',
+            success: function (result) {
+                showMessage(result.message);
+                goToPage(1);
+            },
+            error: function (result) {
+                showMessage(result.message);
+            },
+        });
+    }*@
+</script>

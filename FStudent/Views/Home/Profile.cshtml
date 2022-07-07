@@ -1,0 +1,304 @@
+﻿@{
+    ViewData["Title"] = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<div class="container p-3">
+    <div class="flex-row d-flex mb-3">
+        <div class="w-50">
+            <h2 class="text-primary">Thông tin cá nhân</h2>
+        </div>
+        <div class="w-50 d-flex align-middle justify-content-end text-danger">
+            <b class="text-danger" id="message"></b>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Tổng quan</a>
+                <a class="nav-link" id="v-pills-education-tab" data-toggle="pill" href="#v-pills-education" role="tab" aria-controls="v-pills-education" aria-selected="false">Học vấn</a>
+                <a class="nav-link" id="v-pills-address-tab" data-toggle="pill" href="#v-pills-address" role="tab" aria-controls="v-pills-address" aria-selected="false">Công việc</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                    <form id="formProfile" method="post">
+                        <div class="d-flex flex-column">
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto"><b>Trường</b></label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <label class="my-auto"><b>Thông tin</b></label>
+                                </div>
+                                <div class="w-25">
+                                    <label class="my-auto ml-1"><b>Quyền riêng tư</b></label>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto">Tài khoản tin cậy</label>
+                                </div>
+                                <div class="w-50 pl-2" id="modalInfor_isValidate">
+                                </div>
+                                <div class="w-25">
+                                    <select id="privacyProfile" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                        <option value="0" selected>Công khai</option>
+                                        <option value="1">Riêng tư</option>
+                                        <option value="2">Cùng lớp</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-danger">Họ tên *</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <input type="text" id="modalInfor_fullName" class="form-control form-control-sm" />
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-danger">Biệt hiệu *</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <input type="text" id="modalInfor_nickName" class="form-control form-control-sm" />
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-danger">Ngày sinh *</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <input type="date" id="modalInfor_dateOfBirth" placeholder="dd-mm-yyyy" class="form-control form-control-sm" />
+                                </div>
+                                <div class="w-25">
+                                    <select id="privacyDateOfBirth" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                        <option value="0" selected>Công khai</option>
+                                        <option value="1">Riêng tư</option>
+                                        <option value="2">Cùng lớp</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-danger">Giới tính *</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <select id="modalInfor_gender" class="form-control form-control-sm">
+                                        <option disabled selected>--Giới tính--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto text-info">Số điện thoại</label>
+                                    </div>
+                                    <div class="w-50 pl-2">
+                                        <input type="text" id="modalInfor_phoneNumber" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="w-25">
+                                        <select id="privacyPhoneNumber" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                            <option value="0" selected>Công khai</option>
+                                            <option value="1">Riêng tư</option>
+                                            <option value="2">Cùng lớp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto text-info">Email</label>
+                                    </div>
+                                    <div class="w-50 pl-2">
+                                        <input type="text" id="modalInfor_email" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="w-25">
+                                        <select id="privacyEmail" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                            <option value="0" selected>Công khai</option>
+                                            <option value="1">Riêng tư</option>
+                                            <option value="2">Cùng lớp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto text-info">Skype</label>
+                                    </div>
+                                    <div class="w-50 pl-2">
+                                        <input type="text" id="modalInfor_skype" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="w-25">
+                                        <select id="privacySkype" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                            <option value="0" selected>Công khai</option>
+                                            <option value="1">Riêng tư</option>
+                                            <option value="2">Cùng lớp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto text-info">Zalo</label>
+                                    </div>
+                                    <div class="w-50 pl-2">
+                                        <input type="text" id="modalInfor_zalo" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="w-25">
+                                        <select id="privacyZalo" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                            <option value="0" selected>Công khai</option>
+                                            <option value="1">Riêng tư</option>
+                                            <option value="2">Cùng lớp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto text-info">Facebook</label>
+                                    </div>
+                                    <div class="w-50 pl-2">
+                                        <input type="text" id="modalInfor_facebook" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="w-25">
+                                        <select id="privacyFacebook" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                            <option value="0" selected>Công khai</option>
+                                            <option value="1">Riêng tư</option>
+                                            <option value="2">Cùng lớp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group d-flex text-left mb-2 align-items-center">
+                                    <div class="w-25 pl-2">
+                                        <label class="my-auto text-info">LinkedIn</label>
+                                    </div>
+                                    <div class="w-50 pl-2">
+                                        <input type="text" id="modalInfor_linkedIn" class="form-control form-control-sm" />
+                                    </div>
+                                    <div class="w-25">
+                                        <select id="privacyLinkedIn" class="custom-select custom-select-sm form-control form-control-sm w-auto mx-1">
+                                            <option value="0" selected>Công khai</option>
+                                            <option value="1">Riêng tư</option>
+                                            <option value="2">Cùng lớp</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-info">Thông tin thêm</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <textarea id="modalInfor_about" class="form-control form-control-sm"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex flex-row my-0">
+                                <div class="w-25"></div>
+                                <div class="w-50 d-flex pl-2 justify-content-end" id="changeButton1">
+                                    <button type="button" onclick="activeEdit(1)" class="btn btn-info w-25">Chỉnh sửa</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="v-pills-education" role="tabpanel" aria-labelledby="v-pills-education-tab">
+                    <form id="formLearning" method="post">
+
+                        <div class="d-flex flex-column">
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-info">Hệ đào tạo</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <div id="modalInfor_eduType"></div>
+                                    <select id="modalFilter_EducationType" class="form-control form-control-sm" hidden>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-info">Chuyên ngành</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <div id="modalInfor_spc"></div>
+                                    <select id="modalFilter_Specialization" class="form-control form-control-sm" hidden>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-info">Niên khóa</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <div id="modalInfor_acaYear"></div>
+                                    <select id="modalFilter_AcademicYear" class="form-control form-control-sm" disabled hidden>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex text-left mb-2 align-items-center">
+                                <div class="w-25 pl-2">
+                                    <label class="my-auto text-info">Lớp sinh hoạt</label>
+                                </div>
+                                <div class="w-50 pl-2">
+                                    <div id="modalInfor_actClass"></div>
+                                    <select id="modalFilter_ActivityClass" class="form-control form-control-sm" disabled hidden>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group d-flex flex-row my-0">
+                                <div class="w-25"></div>
+                                <div class="w-50 d-flex pl-2 justify-content-end" id="changeButton2">
+                                    <button type="button" onclick="activeEdit(2)" class="btn btn-info w-25">Chỉnh sửa</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="v-pills-address" role="tabpanel" aria-labelledby="v-pills-address-tab">
+                    <div id="showWorking">
+                        @*Render công việc*@
+                    </div>
+                    <div id="inputForWorking">
+                        @*Render input*@
+                    </div>
+                    <div class="form-group d-flex flex-row my-0">
+                        <div class="w-25"></div>
+                        <div class="w-50 d-flex pl-2 justify-content-end" id="changeButton3">
+                            <button type="button" onclick="activeEdit(3)" class="btn btn-info w-25">Chỉnh sửa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*delete modal*@
+<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <form method="post">
+            <div class="modal-content p-3" style="width: 450px;">
+                <input id="modalDelete_Id" hidden />
+                <div class="form-group flex-row d-flex justify-content-center mb-2">
+                    <h4 class="text-danger mr-1">Xóa công việc</h4><h4 class="text-danger" id="modalDelete_NameWorking"></h4>
+                </div>
+                <div class="d-flex flex-column">
+                    <div class="form-group d-flex flex-row justify-content-center my-0">
+                        <div class="w-75 d-flex">
+                            <button type="button" class="btn btn-success btn-sm mr-2 w-50" data-dismiss="modal"> Đóng</button>
+                            <button type="button" class="btn btn-danger btn-sm w-50" onclick="deleteConfirm()">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    @*Keep this empty*@
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+        <partial name="~/Views/Home/Scripts/IndexScripts.cshtml" />
+    }
+
+}

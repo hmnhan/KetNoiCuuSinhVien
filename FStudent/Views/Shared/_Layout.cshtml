@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản trị cựu sinh viên</title>
+    
+    @*Css font*@
+    <link rel="stylesheet" href="~/fontawesome/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <!-- Favicon icon -->
+    <link rel="stylesheet" href="~/vendor/owl-carousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/vendor/owl-carousel/css/owl.theme.default.min.css">
+    <link href="~/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+    @*Css bootstrap 4.6*@
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    @*Css table*@
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css"/>
+
+
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    @*<header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FormerStudentQNU</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create Admin User</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Manager
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="EducationType" asp-action="Index">Education Type</a></li>
+                                    <li><a class="dropdown-item" asp-controller="AcademicYear" asp-action="Index">Academic Year</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>*@
+    <div id="main-wrapper">
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <div class="nav-header">
+            <a href="" class="brand-logo w-100 justify-content-center p-0">
+                <img class="logo-abbr mr-2" src="~/images/logo1.png" alt="">
+                <!-- <img class="logo-compact" src="./images/logo-text.png" alt=""> -->
+                @*<img class="brand-title" src="./images/logo-text.png" alt="">*@
+                <span class="brand-title w-auto my-auto mx-0 text-nowrap"> Khoa CNTT QNU </span>
+            </a>
+
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">
+            <div class="header-content">
+                <nav class="navbar navbar-expand">
+                    <div class="collapse navbar-collapse justify-content-between">
+                        <div class="header-left">
+                            <div class="search_bar dropdown">
+                                <h2 class="mt-1"> Hệ thống quản trị - kết nối cựu sinh viên </h2>
+                                <!-- <div class="dropdown-menu p-0 m-0">
+
+                                </div> -->
+                            </div>
+                        </div>
+                        <ul class="navbar-nav header-right">
+                            <partial name="_LoginPartial"/>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="quixnav">
+            <div class="quixnav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-chart-bar-33"></i>
+                            <span class="nav-text">Thông tin học tập</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a asp-controller="Specialization" asp-action="Index">Chuyên ngành</a></li>
+                            <li><a asp-controller="EducationType" asp-action="Index">Loại hình đào tạo</a></li>
+                            <li><a asp-controller="AcademicYear" asp-action="Index">Niên khóa</a></li>
+                            <li><a asp-controller="ActivityClass" asp-action="Index">Lớp sinh hoạt</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-app-store"></i><span class="nav-text">Thông tin chung</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a asp-controller="Gender" asp-action="Index">Giới tính</a></li>
+                            <li><a asp-controller="Province" asp-action="Index">Tỉnh/Quận/Huyện/Thành phố</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-chart-bar-33"></i>
+                            <span class="nav-text">Quản trị tài khoản</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a asp-controller="Account" asp-action="AdminDashboard">Tài khoản hệ thống</a></li>
+                            <li><a asp-controller="Account" asp-action="UserDashboard">Tài khoản người dùng</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="icon icon-chart-bar-33"></i>
+                            <span class="nav-text">Tra cứu</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a asp-controller="Profile" asp-action="Index">Xem thông tin</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <!-- row -->
+
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+    </div>
+
+    @*Script bootstrap*@
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+    
+    <!-- Required vendors -->
+    <script src="~/vendor/global/global.min.js"></script>
+    <script src="~/js/quixnav-init.js"></script>
+    <script src="~/js/custom.min.js"></script>
+
+
+    <!-- Vectormap -->
+    <script src="~/vendor/raphael/raphael.min.js"></script>
+    <script src="~/vendor/morris/morris.min.js"></script>
+
+
+    <script src="~/vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="~/vendor/chart.js/Chart.bundle.min.js"></script>
+
+    <script src="~/vendor/gaugeJS/dist/gauge.min.js"></script>
+
+    <!--  flot-chart js -->
+    <script src="~/vendor/flot/jquery.flot.js"></script>
+    <script src="~/vendor/flot/jquery.flot.resize.js"></script>
+
+    <!-- Owl Carousel -->
+    <script src="~/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+
+    <!-- Counter Up -->
+    <script src="~/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+    <script src="~/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+    <script src="~/vendor/jquery.counterup/jquery.counterup.min.js"></script>
+    <script src="~/js/dashboard/dashboard-1.js"></script>
+    @*Script table*@
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.11.3/datatables.min.js"></script>
+    <script type="text/javascript" src="~/js/CustomDataTable.js"></script>
+
+    @*Script font*@
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    @*Prevent double submission*@
+    <script>
+        $("body").on("submit", "form", function() {
+            $(this).submit(function() {
+                return false;
+            });
+            return true;
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
